@@ -11,7 +11,8 @@ $ cd clicky
 $ npm install && npm start
 ```
 
-Now, press the backtick key (`) to start clicking and press it again to stop.
+Now, press the backtick key (`) to start clicking!
+Just press it again to stop.
 
 #### *your clicking problems are whisked away!*
 
