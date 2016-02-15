@@ -12,7 +12,6 @@ class Clicky {
 
     startClicky()
     {
-
         if (this._clickyInterval)
             return;
 
@@ -31,7 +30,6 @@ class Clicky {
 
     click()
     {
-
         this._clickyInterval = setInterval(function() {
             console.log(new Date(), "click!");
             robot.mouseClick();

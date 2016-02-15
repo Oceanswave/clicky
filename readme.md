@@ -18,4 +18,4 @@ Just press it again to stop.
 
 You can do more than just clicks, modify clicky.js to suit your needs and *wham* you're golden.
 
-Have fun!
+Have fun!:+1:
