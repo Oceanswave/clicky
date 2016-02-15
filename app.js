@@ -1,50 +1,28 @@
+"use strict"
 const electron = require('electron');
 const app = electron.app;
 
 const globalShortcut = electron.globalShortcut;
-const robot = require("robotjs");
 
-const powerSaveBlocker = require('electron').powerSaveBlocker;
+const powerSaveBlocker = electron.powerSaveBlocker;
 powerSaveBlocker.start('prevent-app-suspension');
 
-var clickyInterval = null;
+const requireUncached = require('require-uncached');
 
-var randomInt = function (low, high) {
-    return Math.floor(Math.random() * (high - low) + low);
-}
-
-var stopClicky = function() {
-    if (clickyInterval) {
-        console.log("stopping clicky...");
-        clearInterval(clickyInterval);
-        clickyInterval = null;
-    }
-};
-
-var startClicky = function() {
-
-    if (clickyInterval)
-        return;
-
-    console.log("starting clicky...");
-    click();
-};
-
-var click = function() {
-
-    clickyInterval = setInterval(function() {
-        console.log(new Date(), "click!");
-        robot.mouseClick();
-    }, 75);
-};
+var clicky = null;
 
 app.on('ready', function() {
 
     var ret = globalShortcut.register('`', function() {
-        if (clickyInterval)
-            stopClicky();
-        else
-            startClicky();
+        if (clicky) {
+            clicky.stopClicky();
+            clicky = null;
+        }
+        else {
+            let Clicky = requireUncached("./clicky.js").Clicky;
+            clicky = new Clicky();
+            clicky.startClicky();
+        }
     });
 
     if (ret) {
@@ -57,10 +35,13 @@ app.on('ready', function() {
 
 app.on('will-quit', function() {
 
-    stopClicky();
+    if (clicky) {
+        clicky.stopClicky();
+        clicky = null;
+    }
 
     // Unregister a shortcut.
-    globalShortcut.unregister('ctrl+x');
+    //globalShortcut.unregister('ctrl+x');
 
     // Unregister all shortcuts.
     globalShortcut.unregisterAll();
