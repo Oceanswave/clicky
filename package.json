@@ -7,15 +7,20 @@
   },
   "version": "0.0.1",
   "main": "app.js",
+  "devDependencies": {
+    "electron-packager": "^5.2.1"
+  },
   "dependencies": {
     "electron-prebuilt": "^0.36.7",
     "require-uncached": "^1.0.2",
     "robotjs": "^0.3.7",
     "robotjs-combo": "^1.0.0"
   },
+  "bin": {
+    "clicky": "./node_modules/.bin/electron ."
+  },
   "scripts": {
-    "start": "electron .",
-    "test": "electron test.js"
+    "start": "electron ."
   },
   "license": "MIT"
 }
