@@ -3,6 +3,7 @@
 Ever in a situation where you need to click the left mouse button rapidly? Sore index fingers *begone*!
 
 :boom: **TODO:** Installation needs to be fixed:
+
 Just download and start clicky using
 
 ```
