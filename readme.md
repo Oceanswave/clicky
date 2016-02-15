@@ -2,18 +2,19 @@
 
 Ever in a situation where you need to click the left mouse button rapidly? Sore index fingers *begone*!
 
-:boom: **TODO:** Installation needs to be fixed:
-
-Just download and start clicky using
-
+```bash
+# Clone the repository
+$ git clone https://github.com/oceanswave/clicky
+# Go into the repository
+$ cd clicky
+# Install dependencies and run the app
+$ npm install && npm start
 ```
-npm install https://github.com/oceanswave/clicky
-npm start
-```
 
-and press the backtick key
+Now, press the backtick key (`) to start clicking and press it again to stop.
+
 #### *your clicking problems are whisked away!*
 
-You can do more than just clicks, just fork, modify clicky.js to suit your needs and *wham* you're golden.
+You can do more than just clicks, modify clicky.js to suit your needs and *wham* you're golden.
 
 Have fun!
