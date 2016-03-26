@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 const electron = require('electron');
 const app = electron.app;
 
@@ -10,6 +10,12 @@ powerSaveBlocker.start('prevent-app-suspension');
 const requireUncached = require('require-uncached');
 
 var clicky = null;
+
+// app.dock is not defined when running
+// electron in a platform other than OS X
+if (app.dock) {
+    app.dock.hide();
+}
 
 app.on('ready', function() {
 
@@ -23,6 +29,11 @@ app.on('ready', function() {
             clicky = new Clicky();
             clicky.startClicky();
         }
+    });
+
+    globalShortcut.register('Shift+`', function() {
+        let Clicky = requireUncached("./clicky.js").Clicky;
+        console.log(Clicky.getMousePos());
     });
 
     if (ret) {
