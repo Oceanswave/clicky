@@ -16,6 +16,8 @@ Just press it again to stop.
 
 #### *your clicking problems are whisked away!*
 
+Press shift-backtick to output the current mouse position to the console.
+
 You can do more than just clicks, modify clicky.js to suit your needs and *wham* you're golden.
 
 Have fun!:+1:

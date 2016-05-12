@@ -7,24 +7,33 @@ class Clicky {
     constructor() {
         this._shouldStop = false;
 
-        this.topLocation = { x: 1169, y: 330 };
+        this.topLocation = { x: 696, y: 330 }; //Where the "perk" location is. x: 1169 for the horizontal button.
         this.locations = [
-            { x: 696, y: 480 },
+            //Bonus Activation
+            {x: 1325, y: 350 },
+            //Left Selectors
+            //{ x: 696, y: 480 },
             //{ x: 696, y: 720 },
-            { x: 696, y: 930 },
+            //{ x: 696, y: 930 },
             //{ x: 696, y: 1160 },
             //Right Selectors
             //{ x: 1577, y: 265 },
-            { x: 1577, y: 480 },
-            { x: 1577, y: 720 },
-            { x: 1577, y: 930 },
-            { x: 1577, y: 1160 }
+            //{ x: 1577, y: 480 },
+            //{ x: 1577, y: 720 },
+            //{ x: 1577, y: 930 },
+            //{ x: 1577, y: 1160 }
+            //Left Monies
+           //{ x: 1025, y: 720 }
+           //{ x: 1025, y: 930 }
             //Right Monies
+            //{ x: 1975, y: 265 }
             //{ x: 1975, y: 720 },
             //{ x: 1975, y: 930 },
-            //{ x: 1975, y: 116  0 }
+            { x: 1975, y: 1160 },
+            //Left Buys
+            // {x: 1025, y: 602 }
             //Right Buys
-            //{ x: 1935, y: 1282 }
+            { x: 1950, y: 1280 }
         ];
         this.currentIndex = 0;
     }
@@ -64,13 +73,15 @@ class Clicky {
 
     *click()
     {
-        var current = this.locations[this.currentIndex];
+        if (this.locations.length > 0) {
+            var current = this.locations[this.currentIndex];
 
-        robot.moveMouse(current.x, current.y);
-        yield delay(1);
-        robot.mouseClick();
-        robot.keyTap("space");
-
+            robot.moveMouse(current.x, current.y);
+            yield delay(1);
+            robot.mouseClick();
+            robot.keyTap("space");
+        }
+        
         robot.moveMouse(this.topLocation.x, this.topLocation.y);
         yield delay(1);
         robot.mouseClick();
