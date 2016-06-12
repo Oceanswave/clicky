@@ -1,13 +1,13 @@
 "use strict";
 const electron = require('electron');
+const  chokidar = require('chokidar');
+const requireUncached = require('require-uncached');
+
+//Electron related
 const app = electron.app;
-
 const globalShortcut = electron.globalShortcut;
-
 const powerSaveBlocker = electron.powerSaveBlocker;
 powerSaveBlocker.start('prevent-app-suspension');
-
-const requireUncached = require('require-uncached');
 
 let Clicky = null;
 let clicky = null;
@@ -19,8 +19,15 @@ if (app.dock) {
 }
 
 app.on('ready', function () {
- 
-    var ret = globalShortcut.register('`', function () { 
+
+    let coordinates = requireUncached("./clicky-coordinates");
+    
+    chokidar.watch("./clicky-coordinates.js")
+    .on('change', path => {
+        coordinates = requireUncached("./clicky-coordinates");
+    });
+
+    let ret = globalShortcut.register('`', function () { 
         if (clicky) {
             clicky.stopClicky();
             clicky = null;
@@ -28,7 +35,7 @@ app.on('ready', function () {
         }
         else {
             Clicky = requireUncached("./clicky.js").Clicky;
-            clicky = new Clicky();
+            clicky = new Clicky(coordinates);
             clicky.startClicky();
         }
     });
@@ -39,19 +46,25 @@ app.on('ready', function () {
     });
 
     for (let i = 0; i < 9; i++) {
-        globalShortcut.register((i + 1).toString(), function () {
+        globalShortcut.register(`${i + 1}`, function () {
             toggleClickySelector(i);
+        });
+        
+        globalShortcut.register(`Shift+${i + 1}`, function () {
+            toggleClickyLocation(i);
         });
     } 
 
     let toggleClickySelector = function (ix) { 
-        if (!Clicky)
-            return;
-
-        console.log(`Toggling Selector ${ix + 1}`);
-        Clicky.toggleSelector(ix);
+        console.log(`Toggling Selector ${ix + 1}: ${!coordinates.Selectors[ix].enabled}`);
+        coordinates.Selectors[ix].enabled = !coordinates.Selectors[ix].enabled;
     };
 
+    let toggleClickyLocation = function (ix) { 
+        console.log(`Toggling Location ${ix + 1}: ${!coordinates.Locations[ix].enabled}`);
+        coordinates.Locations[ix].enabled = !coordinates.Locations[ix].enabled;
+    };
+    
     if (ret) {
         console.log("ready");
     }
