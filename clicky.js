@@ -9,11 +9,11 @@ class Clicky {
         if (!coordinates)
             coordinates = require("./clicky-coordinates");
 
-        
+
         this._shouldStop = false;
         this.coordinates = coordinates;
         this.currentIndex = 0;
-    } 
+    }
 
     static randomInt(low, high) {
         return Math.floor(Math.random() * (high - low) + low);

@@ -29,7 +29,7 @@ const Locations = [
     { x: 1975, y: 265, enabled: false, delay: 16 },
     { x: 1975, y: 480, enabled: false, delay: 20 },
     { x: 1975, y: 720, enabled: false, delay: 35 },
-    { x: 1975,  y: 930, enabled: false, delay: 25 }, 
+    { x: 1975, y: 930, enabled: false, delay: 25 },
     { x: 1975, y: 1160, enabled: false, delay: 32 },
     //Left Buys
     // {x: 1025, y: 602 }
