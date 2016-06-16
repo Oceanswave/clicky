@@ -20,23 +20,23 @@ if (app.dock) {
 }
 
 //Monitor the active process; if not adcap, stop.
-monitor.getActiveWindow(window => {
+// monitor.getActiveWindow(window => {
 
-    if (window.app !== "adventure-capitalist" && clicky) {
-        console.log(`Stopping, current window is now ${window.app}`);
-        clicky.stopClicky();
-        clicky = null;
-        Clicky = null;
-    }
+//     if (window.app !== "adventure-capitalist" && clicky) {
+//         console.log(`Stopping, current window is now ${window.app}`);
+//         clicky.stopClicky();
+//         clicky = null;
+//         Clicky = null;
+//     }
 
-}, -1, 1);
+// }, -1, 0.1);
 
 //Monitor changes to the coordinates file and auto-reload if it changes.
-let coordinates = requireUncached("./clicky-coordinates");
+let investmentScreenPositions = requireUncached("./investment-screen-positions");
 
-chokidar.watch("./clicky-coordinates.js")
+chokidar.watch("./investment-screen-positions.js")
     .on('change', path => {
-        coordinates = requireUncached("./clicky-coordinates");
+        investmentScreenPositions = requireUncached("./investment-screen-positions");
     });
 
 app.on('ready', function () {
@@ -51,7 +51,7 @@ app.on('ready', function () {
         }
         else {
             Clicky = requireUncached("./clicky.js").Clicky;
-            clicky = new Clicky(coordinates);
+            clicky = new Clicky(investmentScreenPositions);
             clicky.startClicky();
         }
     });
@@ -61,24 +61,28 @@ app.on('ready', function () {
         console.log(Clicky.getMousePos());
     });
 
-    for (let i = 0; i < 9; i++) {
-        globalShortcut.register(`${i + 1}`, function () {
-            toggleClickySelector(i);
+    for (let investmentNumber = 1;investmentNumber < 11; investmentNumber++) {
+        let key = investmentNumber - 1;
+        if (investmentNumber === 1)
+            key = 0;
+
+        globalShortcut.register(`${key}`, function () {
+            toggleInvestmentSelector(investmentNumber);
         });
 
-        globalShortcut.register(`Shift+${i + 1}`, function () {
-            toggleClickyLocation(i);
+        globalShortcut.register(`Shift+${key}`, function () {
+            toggleInvestmentTrigger(investmentNumber);
         });
     }
 
-    let toggleClickySelector = function (ix) {
-        console.log(`Toggling Selector ${ix + 1}: ${!coordinates.Selectors[ix].enabled}`);
-        coordinates.Selectors[ix].enabled = !coordinates.Selectors[ix].enabled;
+    let toggleInvestmentSelector = function (investmentNumber) {
+        console.log(`Toggling Selector for investment #${investmentNumber}: ${!investmentScreenPositions[investmentNumber].selector.enabled}`);
+        investmentScreenPositions[investmentNumber].selector.enabled = !investmentScreenPositions[investmentNumber].selector.enabled;
     };
 
-    let toggleClickyLocation = function (ix) {
-        console.log(`Toggling Location ${ix + 1}: ${!coordinates.Locations[ix].enabled}`);
-        coordinates.Locations[ix].enabled = !coordinates.Locations[ix].enabled;
+    let toggleInvestmentTrigger = function (investmentNumber) {
+        console.log(`Toggling Trigger for investment # ${investmentNumber}: ${!investmentScreenPositions[investmentNumber].trigger.enabled}`);
+        investmentScreenPositions[investmentNumber].trigger.enabled = !investmentScreenPositions[investmentNumber].trigger.enabled;
     };
 
     if (ret) {

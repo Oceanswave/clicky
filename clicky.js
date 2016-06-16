@@ -5,14 +5,14 @@ const delay = require("delay");
 const moment = require("moment");
 
 class Clicky {
-    constructor(coordinates) {
-        if (!coordinates)
-            coordinates = require("./clicky-coordinates");
-
+    constructor(investmentScreenPositions) {
+        if (!investmentScreenPositions)
+            investmentScreenPositions = require("./investment-screen-positions");
 
         this._shouldStop = false;
-        this.coordinates = coordinates;
-        this.currentIndex = 0;
+        this.investments = investmentScreenPositions;
+        this.mashPosition = investmentScreenPositions[1].mash;
+        this.currentInvestment = 2;
     }
 
     static randomInt(low, high) {
@@ -26,7 +26,12 @@ class Clicky {
         var fnClick = co.wrap(function* (self) {
             try {
                 while (!self._shouldStop) {
-                    yield self.click();
+                    try {
+                        yield self.click();
+                    }
+                    catch (ex) {
+                        console.log(ex);
+                    }
                 }
             }
             catch (ex) {
@@ -47,9 +52,12 @@ class Clicky {
     }
 
     *click() {
-        let currentSelector = this.coordinates.Selectors[this.currentIndex];
-        let currentLocation = this.coordinates.Locations[this.currentIndex];
+        let currentSelector = this.investments[this.currentInvestment].selector;
+        let currentTrigger = this.investments[this.currentInvestment].trigger;
 
+console.log(currentSelector)
+console.log(currentTrigger)
+ 
         if (currentSelector.enabled) {
             robot.moveMouse(currentSelector.x, currentSelector.y);
             yield delay(1);
@@ -57,29 +65,29 @@ class Clicky {
             robot.keyTap("space");
         }
 
-        robot.moveMouse(this.coordinates.TopLocation.x, this.coordinates.TopLocation.y);
+        robot.moveMouse(this.mashPosition.x, this.mashPosition.y);
         yield delay(1);
         robot.mouseClick();
         robot.keyTap("space");
 
-        if (currentLocation.enabled) {
+        if (currentTrigger.enabled) {
             let shouldClick = true;
 
-            if (currentLocation.nextClick)
-                shouldClick = moment().isAfter(currentLocation.nextClick);
+            if (currentTrigger.nextClick)
+                shouldClick = moment().isAfter(currentTrigger.nextClick);
 
             if (shouldClick) {
-                robot.moveMouse(currentLocation.x, currentLocation.y);
+                robot.moveMouse(currentTrigger.x, currentTrigger.y);
                 yield delay(1);
                 robot.mouseClick();
                 //robot.keyTap("space");
-                currentLocation.nextClick = moment().add(currentLocation.delay, 'seconds');
+                currentTrigger.nextClick = moment().add(currentTrigger.delay, 'seconds');
             }
         }
 
-        this.currentIndex++;
-        if (this.currentIndex > this.coordinates.Locations.length - 1) {
-            this.currentIndex = 0;
+        this.currentInvestment++;
+        if (this.currentInvestment > 10) {
+            this.currentInvestment = 2;
         }
     }
 
