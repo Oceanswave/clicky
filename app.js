@@ -39,9 +39,9 @@ chokidar.watch("./investment-screen-positions.js")
         investmentScreenPositions = requireUncached("./investment-screen-positions");
     });
 
-app.on('ready', function () {
-
-    let ret = globalShortcut.register('`', function () {
+app.on('ready', function () {                                                                                                                                                                                                                                                                               
+    
+    let ret = globalShortcut.register('`', function () {  
         if (clicky) {
             clicky.stopClicky();
             clicky = null;
@@ -55,6 +55,21 @@ app.on('ready', function () {
             clicky.startClicky();
         }
     });
+
+    globalShortcut.register('Control+`', function () {
+        if (clicky) {
+            clicky.stopClicky();
+            clicky = null;
+            Clicky = null;
+
+            //TODO: Also clear timeouts.
+        }
+        else {
+            Clicky = requireUncached("./clicky.js").Clicky;
+            clicky = new Clicky(investmentScreenPositions);
+            clicky.startClicky("microManager");
+        }
+    }) ;
 
     globalShortcut.register('Shift+`', function () {
         let Clicky = requireUncached("./clicky.js").Clicky;
@@ -73,6 +88,10 @@ app.on('ready', function () {
         globalShortcut.register(`Shift+${key}`, function () {
             toggleInvestmentTrigger(investmentNumber);
         });
+
+        globalShortcut.register(`Control+${key}`, function () {
+            toggleInvestmentPurchase(investmentNumber);
+        });
     }
 
     let toggleInvestmentSelector = function (investmentNumber) {
@@ -83,6 +102,11 @@ app.on('ready', function () {
     let toggleInvestmentTrigger = function (investmentNumber) {
         console.log(`Toggling Trigger for investment # ${investmentNumber}: ${!investmentScreenPositions[investmentNumber].trigger.enabled}`);
         investmentScreenPositions[investmentNumber].trigger.enabled = !investmentScreenPositions[investmentNumber].trigger.enabled;
+    };
+
+    let toggleInvestmentPurchase = function (investmentNumber) {
+        console.log(`Toggling Purchasing for investment # ${investmentNumber}: ${!investmentScreenPositions[investmentNumber].purchase.enabled}`);
+        investmentScreenPositions[investmentNumber].purchase.enabled = !investmentScreenPositions[investmentNumber].purchase.enabled;
     };
 
     if (ret) {

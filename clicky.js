@@ -3,6 +3,7 @@ const co = require("co");
 const robot = require("robotjs");
 const delay = require("delay");
 const moment = require("moment");
+const _ = require("lodash");
 
 class Clicky {
     constructor(investmentScreenPositions) {
@@ -19,8 +20,14 @@ class Clicky {
         return Math.floor(Math.random() * (high - low) + low);
     }
 
-    startClicky() {
+    startClicky(currentInvestment) {
         console.log("starting clicky...");
+
+        if (!currentInvestment)
+            this.currentInvestment = 2;
+        else
+            this.currentInvestment = currentInvestment;
+
         this._shouldStop = false;
 
         var fnClick = co.wrap(function* (self) {
@@ -54,10 +61,8 @@ class Clicky {
     *click() {
         let currentSelector = this.investments[this.currentInvestment].selector;
         let currentTrigger = this.investments[this.currentInvestment].trigger;
+        let currentPurchase = this.investments[this.currentInvestment].purchase;
 
-console.log(currentSelector)
-console.log(currentTrigger)
- 
         if (currentSelector.enabled) {
             robot.moveMouse(currentSelector.x, currentSelector.y);
             yield delay(1);
@@ -65,12 +70,14 @@ console.log(currentTrigger)
             robot.keyTap("space");
         }
 
-        robot.moveMouse(this.mashPosition.x, this.mashPosition.y);
-        yield delay(1);
-        robot.mouseClick();
-        robot.keyTap("space");
+        if (_.isNumber(this.currentInvestment)) {
+            robot.moveMouse(this.mashPosition.x, this.mashPosition.y);
+            yield delay(1);
+            robot.mouseClick();
+            robot.keyTap("space");
+        }
 
-        if (currentTrigger.enabled) {
+        if (currentTrigger && currentTrigger.enabled) {
             let shouldClick = true;
 
             if (currentTrigger.nextClick)
@@ -85,9 +92,17 @@ console.log(currentTrigger)
             }
         }
 
-        this.currentInvestment++;
-        if (this.currentInvestment > 10) {
-            this.currentInvestment = 2;
+        if (currentPurchase && currentPurchase.enabled) {
+            robot.moveMouse(currentPurchase.x, currentPurchase.y);
+            yield delay(1);
+            robot.mouseClick();
+        }
+
+        if (_.isNumber(this.currentInvestment)) {
+            this.currentInvestment++;
+            if (this.currentInvestment > 10) {
+                this.currentInvestment = 2;
+            }
         }
     }
 

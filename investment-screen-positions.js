@@ -1,4 +1,11 @@
+// Coordinates assume 1440x810 screen resolution.
+
 const Investments = {
+    microManager: {
+        selector: {
+            x: 2475, y: 883, enabled: true
+        }
+    },
     /**
      * Left side investments: 
      */
@@ -9,7 +16,8 @@ const Investments = {
         },
         //On events, this is where the "Mash" button is.
         mash: {
-            x: 1169, y: 330
+            //x: 1169, y: 330,
+            x: 696, y: 330
         },
         //Position that triggers the investment.
         trigger: {  
@@ -17,7 +25,7 @@ const Investments = {
         },
         //Position that purchases an investment.
         purchase: {
-
+            x: 1030, y: 330, enabled: false
         },
         //Describes the investment icon region that contains the quantity purchased of the investment.
         quantity: {
@@ -37,7 +45,7 @@ const Investments = {
             x: 1025, y: 480, enabled: false
         },
         purchase: {
-             
+             x: 1030, y: 610, enabled: false
         },
         quantity: {
             x: 1260, y: 840,
@@ -56,6 +64,7 @@ const Investments = {
             x: 1025, y: 720, enabled: false
         },
         purchase: {
+            x: 1030, y: 1300, enabled: false
         },
         quantity: {
             x: 1260, y: 1285,
